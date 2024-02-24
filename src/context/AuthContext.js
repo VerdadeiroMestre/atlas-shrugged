@@ -8,7 +8,6 @@ export const AuthContext = createContext();
 export const AuthProvider = ({children}) => {
   const [userInfo, setUserInfo] = useState({});
   const [isLoading, setIsLoading] = useState(false);
-  const [splashLoading, setSplashLoading] = useState(false);
 
   const register = (name, email, password) => {
     setIsLoading(true);
@@ -55,30 +54,13 @@ export const AuthProvider = ({children}) => {
 
   const logout = () => {
     setIsLoading(true);
-
-    axios
-      .post(
-        `${BASE_URL}/logout`,
-        {},
-        {
-          headers: {Authorization: `Bearer ${userInfo.access_token}`},
-        },
-      )
-      .then(res => {
-        console.log(res.data);
-        AsyncStorage.removeItem('userInfo');
-        setUserInfo({});
-        setIsLoading(false);
-      })
-      .catch(e => {
-        console.log(`logout error ${e}`);
-        setIsLoading(false);
-      });
+    AsyncStorage.removeItem('userInfo');
+    setUserInfo({});
+    setIsLoading(false);
   };
 
   const isLoggedIn = async () => {
     try {
-      setSplashLoading(true);
 
       let userInfo = await AsyncStorage.getItem('userInfo');
       userInfo = JSON.parse(userInfo);
@@ -87,9 +69,7 @@ export const AuthProvider = ({children}) => {
         setUserInfo(userInfo);
       }
 
-      setSplashLoading(false);
     } catch (e) {
-      setSplashLoading(false);
       console.log(`is logged in error ${e}`);
     }
   };
@@ -103,7 +83,6 @@ export const AuthProvider = ({children}) => {
       value={{
         isLoading,
         userInfo,
-        splashLoading,
         register,
         login,
         logout,

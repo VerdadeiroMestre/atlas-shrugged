@@ -27,6 +27,7 @@ import {
 
 import SplashScreen from 'react-native-splash-screen'
 import {AuthProvider} from './src/context/AuthContext';
+import {PostProvider} from './src/context/PostContext';
 import Navigation from './src/components/Navigation';
 
 type SectionProps = PropsWithChildren<{
@@ -101,8 +102,10 @@ function App(): JSX.Element {
     //   </ScrollView>
     // </SafeAreaView>
     <AuthProvider>
-      <StatusBar backgroundColor="#06bcee" />
-      <Navigation />
+      <PostProvider>
+        <StatusBar backgroundColor="#06bcee" />
+        <Navigation />
+      </PostProvider>
     </AuthProvider>
   );
 }
