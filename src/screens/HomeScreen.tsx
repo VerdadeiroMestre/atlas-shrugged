@@ -27,7 +27,7 @@ const Home = ({navigation}) =>{
               <Text style={styles.headerText}>{userInfo.name}</Text>
               <Menu>
                   <MenuTrigger>
-                    <MaterialIcons name='account-circle' size={55} />
+                    <MaterialIcons style={{color: '#CBB071'}} name='account-circle' size={55} />
                   </MenuTrigger>
                   <MenuOptions>
                     <MenuOption  onSelect={() => logout()}>
@@ -72,6 +72,8 @@ const styles = StyleSheet.create({
     },
     headerText: {
         fontSize: 21,
+        fontWeight: 'bold',
+        color: 'black'
     },
     button: {
       backgroundColor: "#2E2E2E",

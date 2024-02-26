@@ -2,6 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import React, {createContext, useEffect, useState} from 'react';
 import {BASE_URL} from '../config';
+import { Alert } from 'react-native';
 
 export const AuthContext = createContext();
 
@@ -9,26 +10,28 @@ export const AuthProvider = ({children}) => {
   const [userInfo, setUserInfo] = useState({});
   const [isLoading, setIsLoading] = useState(false);
 
-  const register = (name, email, password) => {
+  const register = (name, email, password, re_password) => {
     setIsLoading(true);
 
-    axios
-      .post(`${BASE_URL}/register`, {
-        "name": name,
-        "email": email,
-        "password": password,
-      })
-      .then(res => {
-        let userInfo = res.data;
-        setUserInfo(userInfo);
-        AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
-        setIsLoading(false);
-        console.log(userInfo);
-      })
-      .catch(e => {
-        console.log(`register error ${e}`);
-        setIsLoading(false);
-      });
+    if(password != re_password){
+      Alert.alert("Register Error", "Passwords does not match")
+    }else{
+      axios
+        .post(`${BASE_URL}/register`, {
+          "name": name,
+          "email": email,
+          "password": password,
+        })
+        .then(res => {
+          let userInfo = res.data;
+          setUserInfo(userInfo);
+          AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
+        })
+        .catch(e => {
+          console.error(`register error ${e}`);
+        });
+    }
+    setIsLoading(false);
   };
 
   const login = (email, password) => {

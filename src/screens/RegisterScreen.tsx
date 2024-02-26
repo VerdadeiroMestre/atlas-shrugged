@@ -8,6 +8,7 @@ const RegisterScreen = ({navigation}) =>{
     const [name, setName] = useState(null);
     const [email, setEmail] = useState(null);
     const [password, setPassword] = useState(null);
+    const [re_password, setRePassword] = useState(null);
 
     const {isLoading, register} = useContext(AuthContext);
     return (
@@ -44,9 +45,10 @@ const RegisterScreen = ({navigation}) =>{
                     <TextInput
                         style={styles.input}
                         placeholder="confirm password"
-                        secureTextEntry={true} />
+                        secureTextEntry={true}
+                        onChangeText={text => setRePassword(text)}  />
                 </View>
-                <TouchableOpacity onPress={()=>{register(name, email, password);}} style={styles.buttom}>
+                <TouchableOpacity onPress={()=>{register(name, email, password,re_password);}} style={styles.buttom}>
                     <Text style={styles.buttomText}>Register</Text>
                 </TouchableOpacity>
                 <View style={{flexDirection: 'row', marginTop: 20}}>
@@ -90,7 +92,7 @@ const styles = StyleSheet.create({
         marginTop: 18,
         padding: 13,
         justifyContent: 'center',
-        backgroundColor: '#aaa',
+        backgroundColor: '#CBB071',
         borderRadius: 8,
         textAlign: 'center'
     },

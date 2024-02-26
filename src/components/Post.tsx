@@ -14,12 +14,29 @@ import axios from 'axios';
 import {BASE_URL} from '../config';
 
 const Post = ({postInfo, userInfo}) => {
-  const {deletePost, getUserName} = useContext(PostContext);
+  const {deletePost} = useContext(PostContext);
+  const [user_name, setUserName] = useState([]);
   const navigation = useNavigation();
+
+  const requestUserName = () => {
+    axios
+    .get(`${BASE_URL}/get-author/${postInfo.id}`)
+    .then(res => {
+      setUserName(res.data.name);
+    })
+    .catch(e => {
+      console.error(`error getting the name post ${e}`);
+    });
+  }
+
+  useEffect(() => {
+    requestUserName();
+  }, []);
+
     return (
       <View style={styles.postContainer}>
         <View style={styles.header}>
-            <View>{getUserName({post_id: postInfo.id})}</View>
+            <Text style={styles.name}>{user_name}</Text>
             <View style={styles.headerExtra}>
               <Text>{Moment(postInfo.created_at).format('M/D/Y')}</Text>
               {userInfo.id == postInfo.user_id &&
@@ -40,7 +57,7 @@ const Post = ({postInfo, userInfo}) => {
             </View>
         </View>
         <View style={styles.postBody}>
-            <Text>{postInfo.text}</Text>
+            <Text style={styles.text}>{postInfo.text}</Text>
         </View>
       </View>
       );
@@ -58,14 +75,16 @@ const styles = StyleSheet.create({
   },
   header: {
       width: '100%',
-      paddingHorizontal: 13,
+      paddingHorizontal: 8,
       paddingVertical: 8,
       alignItems: 'center',
       flexDirection: 'row',
       justifyContent: 'space-between',
   },
-  headerText: {
-      fontSize: 21,
+  name: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: 'black'
   },
   headerExtra: {
     flexDirection: 'row',
@@ -78,6 +97,9 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     paddingHorizontal: 13,
     paddingVertical: 8,
+  },
+  text: {
+    textAlign: 'justify'
   },
 });
 

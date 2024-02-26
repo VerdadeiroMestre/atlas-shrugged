@@ -7,19 +7,16 @@ export const PostContext = createContext();
 
 export const PostProvider = ({children}) => {
   const [postsList, setPostList] = useState({});
-  const [user_name, setUserName] = useState({});
 
   const listPosts = () => {
       axios
-    .post(`${BASE_URL}/list-posts`, {
-      'my_posts': false,
-    })
+    .get(`${BASE_URL}/posts`)
     .then(res => {
       let postsInfo = res.data;
       setPostList(postsInfo)
     })
     .catch(e => {
-      console.log(`request error ${e}`);
+      console.error(`error listing posts ${e}`);
     });
   }
 
@@ -30,11 +27,10 @@ export const PostProvider = ({children}) => {
         "user_id": user_id,
       })
       .then(res => {
-        console.log(res.data);
         listPosts();
       })
       .catch(e => {
-        console.log(`error ${e}`);
+        console.error(`error creating post${e}`);
       });
   };
   
@@ -45,59 +41,32 @@ export const PostProvider = ({children}) => {
         "text": text,
       })
       .then(res => {
-        console.log(res.data);
         listPosts();
       })
       .catch(e => {
-        console.log(`error ${e}`);
+        console.error(`error updating post ${e}`);
       });
   };
   
   const deletePost = (post_id) => {
     axios
-      .post(`${BASE_URL}/delete-post`, {
-        "post_id": post_id,
-      })
+      .delete(`${BASE_URL}/post/${post_id}`)
       .then(res => {
-        console.log(res.data);
         listPosts();
       })
       .catch(e => {
-        console.log(`error deleting post ${e}`);
+        console.error(`error deleting post ${e}`);
       });
   };
-
-  const requestUserName = (post_id) => {
-    console.log(post_id);
-    axios
-      .post(`${BASE_URL}/get-user-name`, {
-        "post_id": post_id,
-      })
-      .then(res => {
-        console.log(res.data);
-        return <Text>{res.data}</Text>
-      })
-      .catch(e => {
-        console.log(`error getting the name post ${e}`);
-      });
-    
-  }
-
-  const getUserName = ({post_id}) => (
-    <View>{requestUserName({post_id : post_id})}</View>
-  )
-
 
   return(
     <PostContext.Provider
       value={{
         postsList,
-        user_name,
         listPosts,
         createPost,
         updatePost,
         deletePost,
-        getUserName
       }}>
       {children}
     </PostContext.Provider>
